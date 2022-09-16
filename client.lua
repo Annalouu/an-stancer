@@ -455,9 +455,3 @@ function playsound(vehicle,max,file,maxvol)
 		})
 	end
 end
-
-function CheckForKeypress()				
-					if IsControlJustReleased(0, 38) then
-						OpenStancer()
-					end
-end
