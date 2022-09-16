@@ -23,20 +23,20 @@ if Config.One.Active then
 	stancerOne:onPlayerInOut(function(isPointInside)
 			if isPointInside then
 					local playerPed	= PlayerPedId()
-					local coords	= GetEntityCoords(playerPed)
-					QBCore.Functions.GetPlayerData(function(PlayerData)
 						if IsPedSittingInAnyVehicle(playerPed) then
 						text = Config.One.StancerText..  '</br>Press [E]'
 						exports['qb-drawtext']:DrawText(text)
 						StartListeningForControl()
+						print('in car')
 						else
 							text = Config.One.StancerText..'</br>Vehicle is Required'
 							exports['qb-drawtext']:DrawText(text)
-						end
-					end)			
+						print('on foot')
+						end			
 			else
 					exports['qb-drawtext']:HideText('hide')
 					listen = false
+					print('outside')
 			end
 	end)
 end
@@ -53,8 +53,6 @@ end)
 		stancerOne:onPlayerInOut(function(isPointInside)
 				if isPointInside then
 						local playerPed	= PlayerPedId()
-						local coords	= GetEntityCoords(playerPed)
-						QBCore.Functions.GetPlayerData(function(PlayerData)
 							if IsPedSittingInAnyVehicle(playerPed) then
 							text = Config.One.StancerText..  '</br>Press [E]'
 							exports['qb-drawtext']:DrawText(text)
@@ -62,8 +60,7 @@ end)
 							else
 								text = Config.One.StancerText..'</br>Vehicle is Required'
 								exports['qb-drawtext']:DrawText(text)
-							end
-						end)			
+							end 		
 				else
 						exports['qb-drawtext']:HideText('hide')
 						listen = false
