@@ -9,11 +9,15 @@ shared_scripts {
 
 server_scripts {
 	'@mysql-async/lib/MySQL.lua',	
---    'framework/sv_wrapper.lua',
 	"server.lua"
 }
 client_scripts {
 	"client.lua",
+	'@PolyZone/client.lua',
+	'@PolyZone/BoxZone.lua',
+	'@PolyZone/EntityZone.lua',
+	'@PolyZone/CircleZone.lua',
+	'@PolyZone/ComboZone.lua',
 }
 
 files {

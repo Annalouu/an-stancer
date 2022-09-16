@@ -2,6 +2,10 @@ QBCore = exports['qb-core']:GetCoreObject()
 RegisterUsableItem = nil
 stancer = {}
 
+QBCore.Functions.CreateCallback('an-stancer:server:GetLocations', function(_, cb)
+	cb(Config.Locations)
+end)
+
 Citizen.CreateThread(function()
   local ret = SqlFunc(Config.Mysql,'fetchAll','SELECT * FROM an_stancer', {})
   for k,v in pairs(ret) do
@@ -25,8 +29,15 @@ end)
 
 QBCore.Functions.CreateUseableItem("stancerkit", function(source, item)   
   local Player = QBCore.Functions.GetPlayer(source)
-  if Player.Functions.GetItemBySlot(item.slot) ~= nil then
-    TriggerClientEvent("an-stancer:addstancerkit", source)
+  if Config.yes ~= 'no' then
+    if Player.Functions.GetItemBySlot(item.slot) ~= nil then
+      TriggerClientEvent("an-stancer:addstancerkit", source)
+      local xPlayer = GetPlayerFromId(source)
+      local veh = GetVehiclePedIsIn(GetPlayerPed(source),false)
+      if veh ~= 0 then
+      AddStancerKit(veh)
+      end
+    end
   end
 end)
 
@@ -67,8 +78,8 @@ function AddStancerKit(veh)
   end
 end
 
-exports('AddStancerKit', function(vehicle)
-  return AddStancerKit(vehicle)
+exports('AddStancerKit', function(veh)
+  return AddStancerKit(veh)
 end)
 
 AddEventHandler('entityCreated', function(entity)

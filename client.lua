@@ -32,6 +32,13 @@ CreateThread(function()
 	})
 end)
 
+
+RegisterNetEvent("an-stancer:openstancer")
+AddEventHandler("an-stancer:openstancer", function(vehicle,val,coords)
+		OpenStancer()
+end)
+
+
 RegisterNetEvent("an-stancer:airsuspension")
 AddEventHandler("an-stancer:airsuspension", function(vehicle,val,coords)
 	local v = NetToVeh(vehicle)
@@ -96,7 +103,6 @@ AddEventHandler("an-stancer:airsuspension", function(vehicle,val,coords)
 				end
 				SetVehicleSuspensionHeight(v,data.val)
 			end
-			--TriggerServerEvent("renzu_hud:airsuspension_state",VehToNet(vehicle), true)
 			busyplate[plate] = false
 			busyairsus = false
 		end
@@ -221,10 +227,7 @@ RegisterNUICallback('setvehiclewheeloffsetrear', function(data, cb)
 end)
 
 
-RegisterNetEvent("an-stancer:openstancer")
-AddEventHandler("an-stancer:openstancer", function(vehicle,val,coords)
-		OpenStancer()
-end)
+
 
 local cachedata = {}
 local cache = {}
@@ -359,11 +362,15 @@ end
 function OpenStancer()
 	vehicle = getveh()
 	local ent = Entity(vehicle).state
-	if not ent.stancer then
+	if Config.yes == 'no' and not ent.stancer then
 		TriggerServerEvent('an-stancer:addstancer')
-		while not ent.stancer do Wait(200) end
+		while not ent.stancer do 
+			Wait(200) 
+		end
 	end
-	if busy or not ent.stancer then Notify('No Stancer Kit Install') return end
+	if busy or not ent.stancer then
+		QBCore.Functions.Notify("No stancer installed.", "error") return 
+	end
 	local cache = ent.stancer
 	isbusy = true
 	vehicle  = getveh()
@@ -379,7 +386,7 @@ function OpenStancer()
 		end
 		SendNUIMessage({
 			type = "show",
-			content = {bool = carcontrol, offset = offset, rotation = rotation, height = ent.stancer.heightdata}
+			content = {bool = carcontrol, offset = offset, height = ent.stancer.heightdata}
 		})
 		Wait(500)
 		SetNuiFocus(carcontrol,carcontrol)
@@ -395,9 +402,9 @@ function OpenStancer()
 		end)
 	else
 		if GetVehicleDoorLockStatus(vehicle ) ~= 1 then
-			Notify("No Unlock Vehicle Nearby")
+			QBCore.Functions.Notify("No unlocked vehicles nearby.", "error")
 		else
-			Notify("No Nearby Vehicle")
+			QBCore.Functions.Notify("No vehicles nearby", "error")
 		end
 	end
 end
@@ -447,4 +454,10 @@ function playsound(vehicle,max,file,maxvol)
 			content = table
 		})
 	end
+end
+
+function CheckForKeypress()				
+					if IsControlJustReleased(0, 38) then
+						OpenStancer()
+					end
 end
