@@ -42,7 +42,7 @@ if Config.One.Active then
 end
 end)
 
---[[ CreateThread(function()  --------------  This can be a template to add more zones "just add (config.Two.Active....)""
+--[[ CreateThread(function()  --------- -This can be a template to add more zones "just add (config.Two.Active....)""
 	if Config.One.Active then
 		stancerOne = CircleZone:Create(Config.One.Stancer, 3.0, {
 				name="StancerLS",
@@ -395,11 +395,20 @@ RegisterNUICallback('wheelsetting', function(data, cb)
 		veh_stats[plate].wheeledit = false
 		veh_stats[plate].heightdata = ent.stancer.heightdata
 		ent:set('stancer', veh_stats[plate], true)
-		Notify('Vehicle Wheel Data is Saved')
+		QBCore.Functions.Notify("Vehicle Wheel Data is Saved", "success")
 	end
 	cb(true)
 end)
 
+
+RegisterCommand(Config.commands, function()
+	OpenStancer()
+end, false)
+
+CreateThread(function()
+	RegisterKeyMapping(Config.commands, 'Open Car Control', 'keyboard', Config.keybinds)
+	return
+end)
 
 RegisterNUICallback('closecarcontrol', function(data, cb)
 	carcontrol = false
@@ -410,12 +419,6 @@ RegisterNUICallback('closecarcontrol', function(data, cb)
 	SetNuiFocus(false,false)
 	cb(true)
 end)
-
-function Notify(msg)
-	SetNotificationTextEntry('STRING')
-	AddTextComponentString(msg)
-	DrawNotification(0,1)
-end
 
 function OpenStancer()
 	vehicle = getveh()
