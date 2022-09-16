@@ -32,7 +32,6 @@ QBCore.Functions.CreateUseableItem("stancerkit", function(source, item)
   if Config.yes ~= 'no' then
     if Player.Functions.GetItemBySlot(item.slot) ~= nil then
       TriggerClientEvent("an-stancer:addstancerkit", source)
-      local xPlayer = GetPlayerFromId(source)
       local veh = GetVehiclePedIsIn(GetPlayerPed(source),false)
       if veh ~= 0 then
       AddStancerKit(veh)

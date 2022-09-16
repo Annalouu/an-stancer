@@ -7,31 +7,98 @@ wheelsettings = {}
 wheeledit = false
 isbusy = false
 carcontrol = false
+local radialMenuItemId = nil
 veh_stats = {}
 local vehiclesinarea = {}
 
+
 CreateThread(function()
-	exports['qb-target']:SpawnPed({
-		model = 's_m_y_armymech_01', 
-		coords = Config.NPC,
-		minusOne = true, 
-		freeze = true, 
-		invincible = true, 
-		blockevents = true,
-		target = { 
-			options = {
-				{
-					type = "client",
-					event = "an-stancer:openstancer",
-					icon = "fas fa-circle",
-					label = "Stancer",
-				}
-			},
-			distance = 4.0,
-		},
+if Config.One.Active then
+	stancerOne = CircleZone:Create(Config.One.Stancer, 3.0, {
+			name="StancerLS",
+			heading=0.0,
+		--	debugPoly=Config.One.DebugZone,
+			useZ=true,
 	})
+	stancerOne:onPlayerInOut(function(isPointInside)
+			if isPointInside then
+					local playerPed	= PlayerPedId()
+					local coords	= GetEntityCoords(playerPed)
+					QBCore.Functions.GetPlayerData(function(PlayerData)
+						if IsPedSittingInAnyVehicle(playerPed) then
+						text = Config.One.StancerText..  '</br>Press [E]'
+						exports['qb-drawtext']:DrawText(text)
+						StartListeningForControl()
+						else
+							text = Config.One.StancerText..'</br>Vehicle is Required'
+							exports['qb-drawtext']:DrawText(text)
+						end
+					end)			
+			else
+					exports['qb-drawtext']:HideText('hide')
+					listen = false
+			end
+	end)
+end
 end)
 
+--[[ CreateThread(function()  This can be a template to add more zones "just add (config.Two....)""
+	if Config.One.Active then
+		stancerOne = CircleZone:Create(Config.One.Stancer, 3.0, {
+				name="StancerLS",
+				heading=0.0,
+			--	debugPoly=Config.One.DebugZone,
+				useZ=true,
+		})
+		stancerOne:onPlayerInOut(function(isPointInside)
+				if isPointInside then
+						local playerPed	= PlayerPedId()
+						local coords	= GetEntityCoords(playerPed)
+						QBCore.Functions.GetPlayerData(function(PlayerData)
+							if IsPedSittingInAnyVehicle(playerPed) then
+							text = Config.One.StancerText..  '</br>Press [E]'
+							exports['qb-drawtext']:DrawText(text)
+							StartListeningForControl()
+							else
+								text = Config.One.StancerText..'</br>Vehicle is Required'
+								exports['qb-drawtext']:DrawText(text)
+							end
+						end)			
+				else
+						exports['qb-drawtext']:HideText('hide')
+						listen = false
+				end
+		end)
+	end
+	end) ]]
+
+function StartListeningForControl()
+	listen = true
+	CreateThread(function()
+			while listen do
+					if IsControlJustReleased(0, 38) then -- E
+							OpenStancer()
+							listen = false
+					end
+					Wait(1)
+			end
+	end)
+end
+
+
+function SetupInteraction()
+	local Player = PlayerPedId()
+	if IsPedInAnyVehicle(Player) then
+	MenuItemId = exports['qb-radialmenu']:AddOption({
+			id = 'open_stancer_menu',
+			title = 'Stancer',
+			icon = 'mechanic',
+			type = 'client',
+			event = 'an-stancer:openstancer',
+			shouldClose = true,
+	}, MenuItemId)
+	end
+end
 
 RegisterNetEvent("an-stancer:openstancer")
 AddEventHandler("an-stancer:openstancer", function(vehicle,val,coords)
@@ -173,7 +240,7 @@ AddEventHandler("an-stancer:addstancerkit", function()
 						animDict = "mini@repair",
 						anim = "fixing_a_player",
 						flags = 49,
-				}, {}, {}, function() 
+				}, {}, {}, function()
 						TriggerServerEvent("an-stancer:addstancer")
 						TriggerServerEvent('QBCore:Server:RemoveItem', "stancerkit", 1)
 						TriggerEvent('inventory:client:ItemBox', QBCore.Shared.Items["stancerkit"], "remove")
@@ -364,12 +431,12 @@ function OpenStancer()
 	local ent = Entity(vehicle).state
 	if Config.yes == 'no' and not ent.stancer then
 		TriggerServerEvent('an-stancer:addstancer')
-		while not ent.stancer do 
-			Wait(200) 
+		while not ent.stancer do
+			Wait(200)
 		end
 	end
 	if busy or not ent.stancer then
-		QBCore.Functions.Notify("No stancer installed.", "error") return 
+		QBCore.Functions.Notify("No stancer installed.", "error") return
 	end
 	local cache = ent.stancer
 	isbusy = true
@@ -454,4 +521,10 @@ function playsound(vehicle,max,file,maxvol)
 			content = table
 		})
 	end
+end
+
+function CheckForKeypress()
+					if IsControlJustReleased(0, 38) then
+						OpenStancer()
+					end
 end
