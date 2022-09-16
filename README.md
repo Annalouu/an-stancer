@@ -38,4 +38,4 @@ https://youtu.be/lHTILWAIp6I
 
 # dependency 
 - QBCORE
-- qb-target
+- PolyZone
