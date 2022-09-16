@@ -42,7 +42,7 @@ if Config.One.Active then
 end
 end)
 
---[[ CreateThread(function()  This can be a template to add more zones "just add (config.Two....)""
+--[[ CreateThread(function()  --------------  This can be a template to add more zones "just add (config.Two.Active....)""
 	if Config.One.Active then
 		stancerOne = CircleZone:Create(Config.One.Stancer, 3.0, {
 				name="StancerLS",
