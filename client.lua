@@ -69,18 +69,18 @@ end)
 	end
 	end) ]]
 
-function StartListeningForControl()
-	listen = true
-	CreateThread(function()
+	function StartListeningForControl()
+		listen = true
+		InputDisabled = false
+		CreateThread(function()
 			while listen do
-					if IsControlJustReleased(0, 38) then -- E
-							OpenStancer()
-							listen = false
-					end
-					Wait(1)
+				if IsControlJustReleased(0, 38) and not InputDisabled then -- E
+					OpenStancer()
+				end
+				Wait(1)
 			end
-	end)
-end
+		end)
+	end
 
 
 function SetupInteraction()
@@ -409,6 +409,7 @@ end)
 
 RegisterNUICallback('closecarcontrol', function(data, cb)
 	carcontrol = false
+	InputDisabled = false
 	SendNUIMessage({
 		type = "show",
 		content = {bool = false}
