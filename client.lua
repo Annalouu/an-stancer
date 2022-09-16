@@ -401,15 +401,6 @@ RegisterNUICallback('wheelsetting', function(data, cb)
 end)
 
 
-RegisterCommand(Config.commands, function()
-	OpenStancer()
-end, false)
-
-CreateThread(function()
-	RegisterKeyMapping(Config.commands, 'Open Car Control', 'keyboard', Config.keybinds)
-	return
-end)
-
 RegisterNUICallback('closecarcontrol', function(data, cb)
 	carcontrol = false
 	SendNUIMessage({
