@@ -35,7 +35,6 @@ https://youtu.be/4bEgUwasUFg
 # Framework Usage: 
 - use item inside vehicle
 - /giveitem 1 stancerkit 1
-- /stancer or F5 (keybind Default)
 
 # ITEMS
 - stancerkit
