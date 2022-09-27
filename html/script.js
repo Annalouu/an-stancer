@@ -1,4 +1,5 @@
 const stancer = document.getElementById('container')
+
 function playsound(table) {
     var file = table['file']
     var volume = table['volume']
@@ -45,7 +46,7 @@ function setShowCarcontrol(table) {
             slider.querySelector('input').value = val.toFixed(1)
             slider.querySelector('input').addEventListener('input', event => {
                 slider.querySelector('div').innerHTML = event.target.value
-                post("setvehicleheight",{val:event.target.value * 0.01})
+                post("setvehicleheight",{ val: event.target.value * 0.01 })
             });
         });
     
@@ -73,7 +74,7 @@ function setShowCarcontrol(table) {
     }
 }
 
-function post(name,data){
+function post(name, data){
 	var name = name;
 	var data = data;
     var xhr = new XMLHttpRequest()
@@ -83,6 +84,6 @@ function post(name,data){
 }
 
 document.getElementById('close').addEventListener('click', function() {
-        post("wheelsetting",{bool:true})
-        post('closecarcontrol',{})
+    post("wheelsetting", { bool:true })
+    post('closecarcontrol', {})
 }, false)

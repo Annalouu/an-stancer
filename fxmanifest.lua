@@ -1,23 +1,42 @@
+-- [[ Metadata ]] --
 fx_version 'cerulean'
-game 'gta5'
+games { 'gta5' }
+
+-- [[ Author ]] --
+author 'AnnaLou#1509'
+description 'FiveM stancer by AnnaLou'
+
+-- [[ Version ]] --
+version '1.1.0'
+
+-- [[ Dependencies ]] --
+dependencies {
+    'PolyZone',
+}
+
+-- [[ Files ]] --
 ui_page 'html/index.html'
-lua54 'on'
 
 shared_scripts {
-	"config.lua"
+    'config.lua',
 }
 
 server_scripts {
+	-- SQL Import
 	'@mysql-async/lib/MySQL.lua',	
-	"server.lua"
+	-- Server
+	'server.lua',
 }
+
 client_scripts {
-	"client.lua",
-	'@PolyZone/client.lua',
-	'@PolyZone/BoxZone.lua',
-	'@PolyZone/EntityZone.lua',
-	'@PolyZone/CircleZone.lua',
-	'@PolyZone/ComboZone.lua',
+    -- Polyzone
+    '@PolyZone/client.lua',
+    '@PolyZone/BoxZone.lua',
+    '@PolyZone/EntityZone.lua',
+    '@PolyZone/CircleZone.lua',
+    '@PolyZone/ComboZone.lua',
+    -- Client Events
+    'client.lua',
 }
 
 files {
@@ -26,4 +45,8 @@ files {
 	'html/style.css',
 	'html/audio/*.ogg'
 }
-client_script "@Badger-Anticheat/acloader.lua"
+
+-- client_script "@Badger-Anticheat/acloader.lua"
+
+-- [[ Tebex ]] --
+lua54 'yes'

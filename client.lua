@@ -7,101 +7,46 @@ wheelsettings = {}
 wheeledit = false
 isbusy = false
 carcontrol = false
-local radialMenuItemId = nil
 veh_stats = {}
 local vehiclesinarea = {}
 
-
 CreateThread(function()
-if Config.One.Active then
-	stancerOne = CircleZone:Create(Config.One.Stancer, 3.0, {
-			name="StancerLS",
-			heading=0.0,
-		--	debugPoly=Config.One.DebugZone,
-			useZ=true,
-	})
-	stancerOne:onPlayerInOut(function(isPointInside)
-			if isPointInside then
-					local playerPed	= PlayerPedId()
-						if IsPedSittingInAnyVehicle(playerPed) then
-						text = Config.One.StancerText..  '</br>Press [E]'
-						exports['qb-drawtext']:DrawText(text)
+		for k, v in pairs(Config.StanceLocations) do -- For every unique name get it's values
+			stancerZone = CircleZone:Create(v["coords"], v["size"], { -- Check the coords and size of the zone
+				name = v["text"], -- Name the zone accordingly
+				heading = v["heading"], -- Get the heading
+				debugPoly = v["debug"], -- See if the user wants to debug
+				useZ = true, -- Use Z Coords aswell
+			})
+			stancerZone:onPlayerInOut(function(isPointInside)
+				if isPointInside then
+					local playerPed = PlayerPedId()
+					if IsPedSittingInAnyVehicle(playerPed) then
+						exports[Config.DrawText]:DrawText(v["inVehicle"]) -- Get the title
 						StartListeningForControl()
-						print('in car')
-						else
-							text = Config.One.StancerText..'</br>Vehicle is Required'
-							exports['qb-drawtext']:DrawText(text)
-						print('on foot')
-						end			
-			else
-					exports['qb-drawtext']:HideText('hide')
+					else
+						exports[Config.DrawText]:DrawText(v["outVehicle"]) -- Get the title
+					end
+				else
+					exports[Config.DrawText]:HideText('hide')
 					listen = false
-					print('outside')
+				end
+			end)
+		end
+end)
+
+function StartListeningForControl()
+	listen = true
+	InputDisabled = false
+	CreateThread(function()
+		while listen do
+			if IsControlJustReleased(0, 38) and not InputDisabled then -- E
+				OpenStancer()
 			end
+			Wait(1)
+		end
 	end)
 end
-end)
-
---[[ CreateThread(function()  --------- -This can be a template to add more zones "just add (config.Two.Active....)""
-	if Config.One.Active then
-		stancerOne = CircleZone:Create(Config.One.Stancer, 3.0, {
-				name="StancerLS",
-				heading=0.0,
-			--	debugPoly=Config.One.DebugZone,
-				useZ=true,
-		})
-		stancerOne:onPlayerInOut(function(isPointInside)
-				if isPointInside then
-						local playerPed	= PlayerPedId()
-							if IsPedSittingInAnyVehicle(playerPed) then
-							text = Config.One.StancerText..  '</br>Press [E]'
-							exports['qb-drawtext']:DrawText(text)
-							StartListeningForControl()
-							else
-								text = Config.One.StancerText..'</br>Vehicle is Required'
-								exports['qb-drawtext']:DrawText(text)
-							end 		
-				else
-						exports['qb-drawtext']:HideText('hide')
-						listen = false
-				end
-		end)
-	end
-	end) ]]
-
-	function StartListeningForControl()
-		listen = true
-		InputDisabled = false
-		CreateThread(function()
-			while listen do
-				if IsControlJustReleased(0, 38) and not InputDisabled then -- E
-					OpenStancer()
-				end
-				Wait(1)
-			end
-		end)
-	end
-
-
-function SetupInteraction()
-	local Player = PlayerPedId()
-	if IsPedInAnyVehicle(Player) then
-	MenuItemId = exports['qb-radialmenu']:AddOption({
-			id = 'open_stancer_menu',
-			title = 'Stancer',
-			icon = 'mechanic',
-			type = 'client',
-			event = 'an-stancer:openstancer',
-			shouldClose = true,
-	}, MenuItemId)
-	end
-end
-
-RegisterNetEvent("an-stancer:openstancer")
-AddEventHandler("an-stancer:openstancer", function(vehicle,val,coords)
-		OpenStancer()
-end)
-
 
 RegisterNetEvent("an-stancer:airsuspension")
 AddEventHandler("an-stancer:airsuspension", function(vehicle,val,coords)
@@ -228,24 +173,25 @@ end)
 
 RegisterNetEvent('an-stancer:addstancerkit')
 AddEventHandler("an-stancer:addstancerkit", function()
-				QBCore.Functions.Progressbar("Installing The stancerkit", "Installing The stancerkit", 5000, false, true, {
-						disableMovement = true,
-						disableCarMovement = true,
-						disableMouse = false,
-						disableCombat = true,
-				}, {
-						animDict = "mini@repair",
-						anim = "fixing_a_player",
-						flags = 49,
-				}, {}, {}, function()
-						TriggerServerEvent("an-stancer:addstancer")
-						TriggerServerEvent('QBCore:Server:RemoveItem', "stancerkit", 1)
-						TriggerEvent('inventory:client:ItemBox', QBCore.Shared.Items["stancerkit"], "remove")
-						QBCore.Functions.Notify("Stancer Installed", "success")
-						ClearPedTasks(playerPed)
-				end, function()
-					QBCore.Functions.Notify("Failed..", "error")
-				end)
+	QBCore.Functions.Progressbar("Installing The stancerkit", "Installing The stancerkit", 5000, false, true, {
+		disableMovement = true,
+		disableCarMovement = true,
+		disableMouse = false,
+		disableCombat = true,
+	}, {
+		animDict = "mini@repair",
+		anim = "fixing_a_player",
+		flags = 49,
+	}, {}, {}, function()		
+		TriggerServerEvent("an-stancer:addstancer")
+		TriggerServerEvent('QBCore:Server:RemoveItem', "stancerkit", 1)
+		TriggerServerEvent('an-stancer:server:removeItem') -- This is for the new core.
+		TriggerEvent('inventory:client:ItemBox', QBCore.Shared.Items["stancerkit"], "remove")
+		QBCore.Functions.Notify("Stancer Installed", "success")
+		ClearPedTasks(playerPed)
+	end, function()
+		QBCore.Functions.Notify("Failed..", "error")
+	end)
 end)
 
 RegisterNUICallback('setvehiclewheeloffsetfront', function(data, cb)
@@ -411,12 +357,6 @@ end)
 function OpenStancer()
 	vehicle = getveh()
 	local ent = Entity(vehicle).state
-	if Config.yes == 'no' and not ent.stancer then
-		TriggerServerEvent('an-stancer:addstancer')
-		while not ent.stancer do
-			Wait(200)
-		end
-	end
 	if busy or not ent.stancer then
 		QBCore.Functions.Notify("No stancer installed.", "error") return
 	end
@@ -503,10 +443,4 @@ function playsound(vehicle,max,file,maxvol)
 			content = table
 		})
 	end
-end
-
-function CheckForKeypress()
-					if IsControlJustReleased(0, 38) then
-						OpenStancer()
-					end
 end

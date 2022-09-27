@@ -34,11 +34,11 @@ https://youtu.be/4bEgUwasUFg
 
 # Framework Usage: 
 - use item inside vehicle
-- /giveitem 1 stancerkit 1
+- /giveitem id stancerkit 1
 
 # ITEMS
 - stancerkit
 
 # dependency 
-- QBCORE
+- QBcore
 - PolyZone

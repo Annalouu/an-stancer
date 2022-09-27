@@ -1,21 +1,23 @@
-QBCore = exports['qb-core']:GetCoreObject()
+local QBCore = exports['qb-core']:GetCoreObject()
 RegisterUsableItem = nil
 stancer = {}
 
-QBCore.Functions.CreateCallback('an-stancer:server:GetLocations', function(_, cb)
-	cb(Config.Locations)
+-- New Core... Can't remove the item with an export without fetching source or I'm dumb *shrug*
+RegisterServerEvent("an-stancer:server:removeItem", function() 
+  local Player = QBCore.Functions.GetPlayer(source)
+  Player.Functions.RemoveItem("stancerkit", 1)
 end)
 
 Citizen.CreateThread(function()
   local ret = SqlFunc(Config.Mysql,'fetchAll','SELECT * FROM an_stancer', {})
-  for k,v in pairs(ret) do
+  for k, v in pairs(ret) do
     if stancer[v.plate] == nil then stancer[v.plate] = {} end
     stancer[v.plate].plate = v.plate
     stancer[v.plate].stancer = json.decode(v.setting)
     stancer[v.plate].online = false
   end
 
-  for k,v in ipairs(GetAllVehicles()) do
+  for k, v in ipairs(GetAllVehicles()) do
     local plate = GetVehicleNumberPlateText(v)
     if stancer[plate] and plate == stancer[plate].plate then
       if stancer[plate].stancer then
@@ -29,15 +31,13 @@ end)
 
 QBCore.Functions.CreateUseableItem("stancerkit", function(source, item)   
   local Player = QBCore.Functions.GetPlayer(source)
-  if Config.yes ~= 'no' then
-    if Player.Functions.GetItemBySlot(item.slot) ~= nil then
-      TriggerClientEvent("an-stancer:addstancerkit", source)
-      local veh = GetVehiclePedIsIn(GetPlayerPed(source),false)
-      if veh ~= 0 then
+  if Player.Functions.GetItemBySlot(item.slot) ~= nil then 
+    TriggerClientEvent("an-stancer:addstancerkit", source) 
+    local veh = GetVehiclePedIsIn(GetPlayerPed(source), false)
+    if veh ~= 0 then
       AddStancerKit(veh)
-      end
     end
-  end
+  end 
 end)
 
 function SaveStancer(ob)
@@ -139,7 +139,7 @@ function SqlFunc(plugin,type,query,var)
             wait:resolve(result)
         end)
     end
-    if type == 'execute' and plugin == 'oxmysql' then
+    if type == 'execute' and plugin == 'Config.Mysql' then
         exports.oxmysql:execute(query, var, function(result)
             wait:resolve(result)
         end)
