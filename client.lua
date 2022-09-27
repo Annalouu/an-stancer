@@ -183,7 +183,6 @@ AddEventHandler("an-stancer:addstancerkit", function()
 		anim = "fixing_a_player",
 		flags = 49,
 	}, {}, {}, function()		
-		TriggerServerEvent("an-stancer:addstancer")
 		TriggerServerEvent('QBCore:Server:RemoveItem', "stancerkit", 1)
 		TriggerServerEvent('an-stancer:server:removeItem') -- This is for the new core.
 		TriggerEvent('inventory:client:ItemBox', QBCore.Shared.Items["stancerkit"], "remove")

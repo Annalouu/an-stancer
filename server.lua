@@ -107,11 +107,6 @@ AddEventHandler('entityRemoved', function(entity)
   end
 end)
 
-RegisterNetEvent("an-stancer:addstancer") -- Standalone Purpose
-AddEventHandler("an-stancer:addstancer", function(vehicle)
-	AddStancerKit(vehicle)
-end)
-
 RegisterNetEvent("an-stancer:airsuspension")
 AddEventHandler("an-stancer:airsuspension", function(entity,val,coords)
 	TriggerClientEvent("an-stancer:airsuspension", -1, entity,val,coords)
