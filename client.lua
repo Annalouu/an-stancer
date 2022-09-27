@@ -1,7 +1,5 @@
 local QBCore = exports['qb-core']:GetCoreObject()
-customnitro = {}
 busyplate = {}
-nearstancer = {}
 busyairsus = false
 wheelsettings = {}
 wheeledit = false
@@ -183,6 +181,7 @@ AddEventHandler("an-stancer:addstancerkit", function()
 		anim = "fixing_a_player",
 		flags = 49,
 	}, {}, {}, function()		
+	--	TriggerServerEvent("an-stancer:addstancer")
 		TriggerServerEvent('QBCore:Server:RemoveItem', "stancerkit", 1)
 		TriggerServerEvent('an-stancer:server:removeItem') -- This is for the new core.
 		TriggerEvent('inventory:client:ItemBox', QBCore.Shared.Items["stancerkit"], "remove")
@@ -357,6 +356,7 @@ function OpenStancer()
 	vehicle = getveh()
 	local ent = Entity(vehicle).state
 	if busy or not ent.stancer then
+		print(ent.stancer)
 		QBCore.Functions.Notify("No stancer installed.", "error") return
 	end
 	local cache = ent.stancer
