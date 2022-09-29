@@ -171,20 +171,30 @@ end)
 
 RegisterNetEvent('an-stancer:addstancerkit')
 AddEventHandler("an-stancer:addstancerkit", function()
-	QBCore.Functions.Progressbar("Installing The stancerkit", "Installing The stancerkit", 5000, false, true, {
-		disableMovement = true,
-		disableCarMovement = true,
-		disableMouse = false,
-		disableCombat = true,
-	}, {}, {}, {}, function()
-		TriggerServerEvent('QBCore:Server:RemoveItem', "stancerkit", 1)
-		TriggerServerEvent('an-stancer:server:removeItem') -- This is for the new core.
-		TriggerEvent('inventory:client:ItemBox', QBCore.Shared.Items["stancerkit"], "remove")
-		QBCore.Functions.Notify("Stancer Installed", "success")
-		ClearPedTasks(playerPed)
-	end, function()
-		QBCore.Functions.Notify("Failed..", "error")
-	end)
+	local IsInVehicle = IsPedInAnyVehicle(PlayerPedId())
+
+		if IsInVehicle then
+			QBCore.Functions.Progressbar("Installing The stancerkit", "Installing The stancerkit", 5000, false, true, {
+				disableMovement = true,
+				disableCarMovement = true,
+				disableMouse = false,
+				disableCombat = true,
+			}, {
+				animDict = "mini@repair",
+				anim = "fixing_a_player",
+				flags = 49,
+			}, {}, {}, function()
+				TriggerServerEvent('QBCore:Server:RemoveItem', "stancerkit", 1)
+				TriggerServerEvent('an-stancer:server:removeItem') -- This is for the new core.
+				TriggerEvent('inventory:client:ItemBox', QBCore.Shared.Items["stancerkit"], "remove")
+				QBCore.Functions.Notify("Stancer Installed", "success")
+				ClearPedTasks(playerPed)
+			end, function()
+				QBCore.Functions.Notify("Failed..", "error")
+			end)
+		else
+			QBCore.Functions.Notify("You are not in a vehicle.", "error")
+		end
 end)
 
 RegisterNUICallback('setvehiclewheeloffsetfront', function(data, cb)
@@ -323,7 +333,6 @@ RegisterNUICallback('wheelsetting', function(data, cb)
 		wheelsettings[plate]['wheeloffsetrear'].wheel3 = GetVehicleWheelXOffset(vehicle,3)
 	end
 	veh_stats[plate]['wheelsetting'] = wheelsettings[plate]
-	--end
 	veh_stats[plate].height = vehicle_height
     if vehicle ~= nil and vehicle ~= 0 then
 		print("saving stance")
@@ -351,6 +360,7 @@ function OpenStancer()
 	vehicle = getveh()
 	local ent = Entity(vehicle).state
 	if busy or not ent.stancer then
+		print(ent.stancer)
 		QBCore.Functions.Notify("No stancer installed.", "error") return
 	end
 	local cache = ent.stancer
