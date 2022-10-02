@@ -2,7 +2,6 @@ local QBCore = exports['qb-core']:GetCoreObject()
 RegisterUsableItem = nil
 stancer = {}
 
--- New Core... Can't remove the item with an export without fetching source or I'm dumb *shrug*
 RegisterServerEvent("an-stancer:server:removeItem", function() 
   local Player = QBCore.Functions.GetPlayer(source)
   Player.Functions.RemoveItem("stancerkit", 1)
