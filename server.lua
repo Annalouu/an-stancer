@@ -133,7 +133,7 @@ function SqlFunc(plugin,type,query,var)
             wait:resolve(result)
         end)
     end
-    if type == 'execute' and plugin == 'Config.Mysql' then
+    if type == 'execute' and plugin == Config.Mysql then
         exports.oxmysql:execute(query, var, function(result)
             wait:resolve(result)
         end)
