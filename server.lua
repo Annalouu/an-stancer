@@ -2,6 +2,7 @@ local QBCore = exports['qb-core']:GetCoreObject()
 RegisterUsableItem = nil
 stancer = {}
 
+-- New Core... Can't remove the item with an export without fetching source or I'm dumb *shrug*
 RegisterServerEvent("an-stancer:server:removeItem", function() 
   local Player = QBCore.Functions.GetPlayer(source)
   Player.Functions.RemoveItem("stancerkit", 1)
@@ -53,6 +54,7 @@ function SaveStancer(ob)
           ['@setting']   = json.encode(ob.setting),
         })
     end
+    print('saved')
 end
 
 function firstToUpper(str)
@@ -113,33 +115,13 @@ end)
 
 function SqlFunc(plugin,type,query,var)
 	local wait = promise.new()
-    if type == 'fetchAll' and plugin == 'mysql-async' then
-		    MySQL.Async.fetchAll(query, var, function(result)
-            wait:resolve(result)
-        end)
-    end
-    if type == 'execute' and plugin == 'mysql-async' then
-        MySQL.Async.execute(query, var, function(result)
-            wait:resolve(result)
-        end)
-    end
-    if type == 'execute' and plugin == 'ghmattisql' then
-        exports['ghmattimysql']:execute(query, var, function(result)
-            wait:resolve(result)
-        end)
-    end
-    if type == 'fetchAll' and plugin == 'ghmattisql' then
-        exports.ghmattimysql:execute(query, var, function(result)
-            wait:resolve(result)
-        end)
-    end
     if type == 'execute' and plugin == Config.Mysql then
-        exports.oxmysql:execute(query, var, function(result)
+        exports[Config.Mysql]:execute(query, var, function(result)
             wait:resolve(result)
         end)
     end
-    if type == 'fetchAll' and plugin == 'oxmysql' then
-		exports['oxmysql']:fetch(query, var, function(result)
+    if type == 'fetchAll' and plugin == Config.Mysql then
+		exports[Config.Mysql]:fetch(query, var, function(result)
 			wait:resolve(result)
 		end)
     end

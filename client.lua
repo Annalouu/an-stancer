@@ -169,8 +169,8 @@ exports('SetWheelOffsetFront', function(vehicle, val)
 	return SetWheelOffsetFront(vehicle, val)
 end)
 
-RegisterNetEvent('an-stancer:addstancerkit')
-AddEventHandler("an-stancer:addstancerkit", function()
+
+RegisterNetEvent("an-stancer:addstancerkit", function()
 	local IsInVehicle = IsPedInAnyVehicle(PlayerPedId())
 
 		if IsInVehicle then
@@ -184,9 +184,7 @@ AddEventHandler("an-stancer:addstancerkit", function()
 				anim = "fixing_a_player",
 				flags = 49,
 			}, {}, {}, function()
-				TriggerServerEvent('QBCore:Server:RemoveItem', "stancerkit", 1)
-				TriggerServerEvent('an-stancer:server:removeItem') -- This is for the new core.
-				TriggerEvent('inventory:client:ItemBox', QBCore.Shared.Items["stancerkit"], "remove")
+				TriggerServerEvent('an-stancer:server:removeItem')
 				QBCore.Functions.Notify("Stancer Installed", "success")
 				ClearPedTasks(playerPed)
 			end, function()
