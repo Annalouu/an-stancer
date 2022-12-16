@@ -172,7 +172,6 @@ end)
 
 RegisterNetEvent("an-stancer:addstancerkit", function()
 	local IsInVehicle = IsPedInAnyVehicle(PlayerPedId())
-
 		if IsInVehicle then
 			QBCore.Functions.Progressbar("Installing The stancerkit", "Installing The stancerkit", 5000, false, true, {
 				disableMovement = true,
@@ -236,9 +235,6 @@ RegisterNUICallback('setvehiclewheeloffsetrear', function(data, cb)
     end
 	cb(true)
 end)
-
-
-
 
 local cachedata = {}
 local cache = {}

@@ -15,7 +15,6 @@ Citizen.CreateThread(function()
     stancer[v.plate].stancer = json.decode(v.setting)
     stancer[v.plate].online = false
   end
-
   for k, v in ipairs(GetAllVehicles()) do
     local plate = GetVehicleNumberPlateText(v)
     if stancer[plate] and plate == stancer[plate].plate then
