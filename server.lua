@@ -2,7 +2,7 @@ local QBCore = exports['qb-core']:GetCoreObject()
 RegisterUsableItem = nil
 stancer = {}
 
-RegisterServerEvent("an-stancer:server:removeItem", function() 
+RegisterServerEvent("an-stancer:server:removestancer", function() 
   local Player = QBCore.Functions.GetPlayer(source)
   Player.Functions.RemoveItem("stancerkit", 1, false)
 end)

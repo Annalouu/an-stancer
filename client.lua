@@ -184,7 +184,7 @@ RegisterNetEvent("an-stancer:addstancerkit", function()
 				anim = "fixing_a_player",
 				flags = 49,
 			}, {}, {}, function()
-				TriggerServerEvent('an-stancer:server:removeItem')
+				TriggerServerEvent("an-stancer:server:removestancer")
 				QBCore.Functions.Notify("Stancer Installed", "success")
 				ClearPedTasks(playerPed)
 			end, function()
