@@ -1,10 +1,61 @@
-local QBCore = exports['qb-core']:GetCoreObject()
-RegisterUsableItem = nil
-stancer = {}
+local isQB = GetResourceState('qb-core') == "started"
+
+local User = {}
+local stancer = {}
+local Config = require "config".server
+
+if isQB then
+  local QBCore = exports['qb-core']:GetCoreObject()
+  User.get = function (source)
+      User.PlayerData = User.PlayerData or {}
+      if not User.PlayerData[source] then
+          User.PlayerData[source] = QBCore.Functions.GetPlayer(source)
+      end
+      return User.PlayerData[source]
+  end
+  User.removeItem = function (source, name, amount)
+      local Player = User.get(source)
+      return Player.Functions.RemoveItem(name, amount)
+  end
+  User.getItem = function (source, name)
+      local Player = User.get(source)
+      return Player.Functions.GetItemByName(name)
+  end
+  User.registerUsableItem = function (item, cb, ...)
+      return QBCore.Functions.CreateUseableItem(item, cb)
+  end
+else
+  local ESX = exports["es_extended"]:getSharedObject()
+  User.get = function (source)
+      User.PlayerData = User.PlayerData or {}
+      if not User.PlayerData[source] then
+          User.PlayerData[source] = ESX.GetPlayerFromId(source)
+      end
+      return User.PlayerData[source]
+  end
+  User.removeItem = function (source, name, amount)
+      local Player = User.get(source)
+      if Player.getInventoryItem(name).count >= amount then
+          Player.removeInventoryItem(name, amount)
+          return true
+      end
+      return false
+  end
+  User.getItem = function (source, name)
+      local Player = User.get(source)
+      if Player.getInventoryItem(name).count >= 1 then
+        return true
+      end
+      return false
+  end
+  
+  User.registerUsableItem = function (item, cb, ...)
+      return ESX.RegisterUsableItem(item, cb)
+  end
+end
 
 RegisterServerEvent("an-stancer:server:removestancer", function() 
-  local Player = QBCore.Functions.GetPlayer(source)
-  Player.Functions.RemoveItem("stancerkit", 1, false)
+  User.removeItem(source, "stancerkit", 1)
 end)
 
 Citizen.CreateThread(function()
@@ -27,15 +78,14 @@ Citizen.CreateThread(function()
   end
 end)
 
-QBCore.Functions.CreateUseableItem("stancerkit", function(source, item)   
-  local Player = QBCore.Functions.GetPlayer(source)
-  if Player.Functions.GetItemBySlot(item.slot) ~= nil then 
-    TriggerClientEvent("an-stancer:addstancerkit", source) 
-    local veh = GetVehiclePedIsIn(GetPlayerPed(source), false)
-    if veh ~= 0 then
-      AddStancerKit(veh)
+User.registerUsableItem('stancerkit', function (source)
+    if User.getItem(source, "stancerkit") then
+        TriggerClientEvent("an-stancer:addstancerkit", source)
+        local veh = GetVehiclePedIsIn(GetPlayerPed(source), false)
+        if veh ~= 0 then
+          AddStancerKit(veh)
+        end
     end
-  end 
 end)
 
 function SaveStancer(ob)

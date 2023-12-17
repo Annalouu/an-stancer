@@ -1,25 +1,37 @@
-Config = {}
+return {
+    utils = {
+        drawtext = function (text, type)
+            if type == "show" then
+                lib.showTextUI(text)
+            else
+                lib.hideTextUI()
+            end
+        end,
+        Notify = function (msg, type, duration)
+            lib.notify({
+                description = msg,
+                type = type,
+                duration = duration
+            })
+        end
+    },
+    client = {
+        FixedCamera = true,
+        StanceLocations = {
+            {
+                coords = vec3(1127.5533, 2648.6147, 37.9965),
+                size = 3.0,
+                debug = true,
+                drawtext = {
+                    inveh = "Press E for the Stancer",
+                    outveh = "You need to be in a vehicle!"
+                }
 
-Config.Mysql = 'oxmysql' -- mysql-async, ghmattisql, oxmysql
-Config.FixedCamera = true
-
-Config.DrawText = "qb-core" -- Define the export resource accordingly | qb-core, qb-drawtext
-
-Config.StanceLocations = {
-  ["customsMain"] = { -- THis name should be unique no duplicates
-    ["coords"] = vector3(-325.6, -138.89, 39.02), -- The coords of the zone
-    ["size"] = 3.0, -- How big is the zone?
-    ["heading"] = 0.0, -- Heading
-    ["debug"] = false, -- Should zone be debugged?
-    ["inVehicle"] = "Press E for the Stancer", -- The name if a user is in a vehicle
-    ["outVehicle"] = "You need to be in a vehicle!", -- Message if user is not in a vehicle
-  },
-  ["tunershop"] = { -- THis name should be unique no duplicates
-    ["coords"] = vector3(125.23, -3040.95, 7.04), -- The coords of the zone
-    ["size"] = 3.0, -- How big is the zone?
-    ["heading"] = 0.0, -- Heading
-    ["debug"] = false, -- Should zone be debugged?
-    ["inVehicle"] = "Press E for the Stancer", -- The name if a user is in a vehicle
-    ["outVehicle"] = "You need to be in a vehicle!", -- Message if user is not in a vehicle
-  },
+            }
+        },
+        progressbar = "ox" --- qb / ox / refine-radialbar
+    },
+    server = {
+        Mysql = "oxmysql"
+    }
 }
