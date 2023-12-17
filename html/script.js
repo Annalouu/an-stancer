@@ -71,6 +71,28 @@ function setShowCarcontrol(table) {
                 post("setvehiclewheeloffsetrear",{val:event.target.value})
             });
         });
+
+        const setvehiclewheelrotationfront = document.querySelectorAll('#wheelrotf');
+        Array.prototype.forEach.call(setvehiclewheelrotationfront, slider => {
+            const val = table.rotation[1]
+            slider.querySelector('input').value = val.toFixed(2)
+            slider.querySelector('div').innerHTML = val.toFixed(2)
+            slider.querySelector('input').addEventListener('input', event => {
+                slider.querySelector('div').innerHTML = event.target.value
+                post("setvehiclewheelrotationfront",{val:event.target.value})
+            });
+        });
+
+        const setvehiclewheelrotationrear = document.querySelectorAll('#wheelrotr');
+        Array.prototype.forEach.call(setvehiclewheelrotationrear, slider => {
+            const val = table.rotation[2]
+            slider.querySelector('input').value = val.toFixed(2)
+            slider.querySelector('div').innerHTML = val.toFixed(2)
+            slider.querySelector('input').addEventListener('input', event => {
+                slider.querySelector('div').innerHTML = event.target.value
+                post("setvehiclewheelrotationrear",{val:event.target.value})
+            });
+        });
     }
 }
 
