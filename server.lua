@@ -66,15 +66,18 @@ Citizen.CreateThread(function()
     stancer[v.plate].stancer = json.decode(v.setting)
     stancer[v.plate].online = false
   end
-  for k, v in ipairs(GetAllVehicles()) do
-    local plate = GetVehicleNumberPlateText(v)
-    if stancer[plate] and plate == stancer[plate].plate then
-      if stancer[plate].stancer then
-        local ent = Entity(v).state
-        ent.stancer = stancer[plate].stancer
-        ent.online = true
+  while true do
+    for k, v in ipairs(GetAllVehicles()) do
+      local plate = GetVehicleNumberPlateText(v)
+      if stancer[plate] and plate == stancer[plate].plate then
+        if stancer[plate].stancer then
+          local ent = Entity(v).state
+          ent.stancer = stancer[plate].stancer
+          ent.online = true
+        end
       end
     end
+    Wait(2000)
   end
 end)
 
