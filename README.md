@@ -22,7 +22,9 @@ https://github.com/renzuzu/renzu_stancer
 - ensure an-stancer (After Qb-core)
 - Add this to your qb-core/shared/items.lua.
 
-```['stancerkit'] 				 	 = {['name'] = 'stancerkit', 			    	['label'] = 'Camber Arms', 				['weight'] = 2000, 	['type'] = 'item', 		['image'] = 'tunerchip.png', 			['unique'] = false, 	['useable'] = true, 	['shouldClose'] = true,	   ['combinable'] = nil,    ['description'] = 'Camber arms can be used to adjust vehicle tire angle'},```
+```lua
+['stancerkit'] 				 	 = {['name'] = 'stancerkit', 			    	['label'] = 'Camber Arms', 				['weight'] = 2000, 	['type'] = 'item', 		['image'] = 'tunerchip.png', 			['unique'] = false, 	['useable'] = true, 	['shouldClose'] = true,	   ['combinable'] = nil,    ['description'] = 'Camber arms can be used to adjust vehicle tire angle'},
+```
 
 
 # Image
