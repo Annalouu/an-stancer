@@ -280,6 +280,7 @@ RegisterNUICallback('wheelsetting', function(data, cb)
 		veh_stats[plate].wheeledit = false
 		veh_stats[plate].heightdata = ent.stancer.heightdata
 		ent:set('stancer', veh_stats[plate], true)
+		TriggerServerEvent('an-stancer:server:save',veh_stats[plate])
 		Utils.Notify("Vehicle Wheel Data is Saved", "success")
 	end
 	cb(true)

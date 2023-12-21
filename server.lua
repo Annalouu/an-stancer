@@ -133,32 +133,6 @@ exports('AddStancerKit', function(veh)
   return AddStancerKit(veh)
 end)
 
-AddEventHandler('entityCreated', function(entity)
-  local entity = entity
-  Wait(4000)
-  if DoesEntityExist(entity) and GetEntityPopulationType(entity) == 7 and GetEntityType(entity) == 2 then
-    local plate = GetVehicleNumberPlateText(entity)
-    if stancer[plate] and stancer[plate].stancer then
-      local ent = Entity(entity).state
-      ent.stancer = stancer[plate].stancer
-      stancer[plate].online = true
-    end
-  end
-end)
-
-AddEventHandler('entityRemoved', function(entity)
-  local entity = entity
-  if DoesEntityExist(entity) and GetEntityPopulationType(entity) == 7 and GetEntityType(entity) == 2 then
-    local ent = Entity(entity).state
-    if ent.stancer then
-      local plate = GetVehicleNumberPlateText(entity)
-      stancer[plate].online = false
-      stancer[plate].stancer = ent.stancer
-      SaveStancer({plate = plate, setting = stancer[plate].stancer})
-    end
-  end
-end)
-
 RegisterNetEvent("an-stancer:airsuspension")
 AddEventHandler("an-stancer:airsuspension", function(entity,val,coords)
 	TriggerClientEvent("an-stancer:airsuspension", -1, entity,val,coords)
@@ -178,3 +152,15 @@ function SqlFunc(plugin,type,query,var)
     end
 	return Citizen.Await(wait)
 end
+
+RegisterNetEvent("an-stancer:server:save")
+AddEventHandler("an-stancer:server:save", function(stance)
+    local vehicle = GetVehiclePedIsIn(GetPlayerPed(source), false)
+    local ent = Entity(vehicle).state
+    if ent.stancer then
+        local plate = GetVehicleNumberPlateText(vehicle)
+        if not stancer[plate] then stancer[plate] = {} end
+        stancer[plate] = stance
+        SaveStancer({plate = plate, setting = ent.stancer})
+    end
+end)
