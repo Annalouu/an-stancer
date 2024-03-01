@@ -10,7 +10,14 @@ local inZone = {}
 
 local Config = require "config".client
 local Utils = require "config".utils
+local shared = require "config".shared
 local Progress = require "client.progressbar"
+
+if shared.Qbcore then
+	QBCore = exports['qb-core']:GetCoreObject()
+else 
+	ESX = exports["es_extended"]:getSharedObject()
+end
 
 --- function
 
@@ -308,8 +315,16 @@ CreateThread(function()
 			debug = v.debug,
 			inside = function ()
 				if IsControlJustPressed(0, 38) then
-					OpenStancer()
-
+					if shared.Qbcore then
+						Playerjob = QBCore.Functions.GetPlayerData().job.name
+					else 
+						Playerjob = ESX.GetPlayerData().job.name
+					end
+					if Playerjob == v.job then
+						OpenStancer()
+					else 
+						Utils.Notify("You are not a "..v.job.." mechanic", "error")
+					end
 				end
 			end,
 			onEnter = function ()
