@@ -3,6 +3,8 @@ local isQB = GetResourceState('qb-core') == "started"
 local User = {}
 local stancer = {}
 local Config = require "config".server
+local shared = require "config".shared
+local isQB = shared.Qbcore
 
 if isQB then
   local QBCore = exports['qb-core']:GetCoreObject()
