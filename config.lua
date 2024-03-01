@@ -1,4 +1,7 @@
 return {
+    shared = {
+        Qbcore = true -- if Qb set to true, false for ESX
+    },
     utils = {
         drawtext = function (text, type)
             if type == "show" then
